@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class Entity:
+class CatalogEntity:
     entity_name: str
     entity_description: str
     entity_address: str
@@ -21,9 +21,9 @@ class Entity:
     report_url: str
 
 
-class JSONEntityEncoder(json.JSONEncoder):
+class JSONCatalogEntityEncoder(json.JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, Entity):
+        if isinstance(obj, CatalogEntity):
             return asdict(obj)
         return super().default(self, obj)
 
@@ -49,7 +49,7 @@ def parse_entity(element):
     # TODO: Extract exemption status
     report_url = div_report.xpath(".//img")[0].attrib["src"]
 
-    return Entity(
+    return CatalogEntity(
         entity_name=entity_name,
         entity_description=entity_description,
         entity_address=entity_address,
@@ -82,7 +82,7 @@ def main():
         page = lxml.html.fromstring(resp.text)
         entities[name] = parse_entities(page)
 
-    with open("data.json", "w") as fh:
+    with open("catalog.json", "w") as fh:
         json.dump(entities, fh, cls=JSONEntityEncoder)
 
 
