@@ -83,7 +83,7 @@ def main():
         entities[name] = parse_entities(page)
 
     with open("catalog.json", "w") as fh:
-        json.dump(entities, fh, cls=JSONEntityEncoder)
+        json.dump(entities, fh, ensure_ascii=False, cls=JSONCatalogEntityEncoder)
 
 
 if __name__ == "__main__":
