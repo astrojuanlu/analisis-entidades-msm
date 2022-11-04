@@ -76,11 +76,26 @@ def main():
     for name, cat_id in categories.items():
         logger.info("Reading category %s", name)
 
-        resp = httpx.get(CATALOG_URL, params={"categories": cat_id})
-        resp.raise_for_status()
+        current_entities = []
+        page_number = 1
+        while True:
+            params = {"categories": cat_id}
+            if page_number > 1:
+                params["page"] = page_number
 
-        page = lxml.html.fromstring(resp.text)
-        entities[name] = parse_entities(page)
+            resp = httpx.get(CATALOG_URL, params=params)
+            if resp.status_code == 404:
+                # We ran out of entities, break
+                break
+            else:
+                page_number += 1
+            # There might be other errors: if so, raise
+            resp.raise_for_status()
+
+            page = lxml.html.fromstring(resp.text)
+            current_entities.extend(parse_entities(page))
+
+        entities[name] = current_entities
 
     with open("catalog.json", "w") as fh:
         json.dump(entities, fh, ensure_ascii=False, cls=JSONCatalogEntityEncoder)
