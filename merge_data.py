@@ -59,6 +59,17 @@ df = df_catalog.join(matches, on="catalog_idx", how="left").join(
     df_benefits, on="benefits_idx", how="left"
 )[catalog_cols + ["categories_in_benefits", "benefit_text"]]
 
+df = df.with_columns(
+    [
+        pl.col("benefit_text")
+        .str.contains("registrada en la app")
+        .alias("mentions_app"),
+        pl.col("benefit_text")
+        .str.contains("madrid@mercadosocial.net para indicarte el procedimiento")
+        .alias("manual_email_procedure"),
+    ]
+)
+
 df.drop(["categories_in_catalog", "categories_in_benefits"]).sort(
     "entity_name"
 ).write_csv("entities_full.csv")

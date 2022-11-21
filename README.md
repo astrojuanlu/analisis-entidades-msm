@@ -35,3 +35,9 @@
   - ¿Instagram poco aprovechado?
     - Categorías más activas en Instagram: Limpieza / Jardinería / Bricolaje, Textil / Calzado, Educación / Empleo
     - Categorías menos activas en Instagram: Asesoría / Jurídicos, Desarrollo Comunitario, Turismo / Ocio / Cultura
+- Beneficios / Descuentos
+  - 42 entidades de 175 tienen algún tipo de beneficio (un 25 %) de las cuales
+    - 9 mencionan "enseña la app en la tienda" (un 21 %),
+    - 35 mencionan "escríbenos al correo para explicarte el procedimiento" (un 83 %),
+    - y hay 1 que no menciona ninguna de las dos
+    - nótese que hay 3 entidades que mencionan ambas
