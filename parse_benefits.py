@@ -11,7 +11,9 @@ BENEFITS_URL = "https://madrid.mercadosocial.net/ventajas-socias/"
 
 
 def get_categories(element):
-    links = element.xpath("//div[@class='post-content']//a")
+    links = element.xpath(
+        "//div[@class='post-content']//div[@class='fusion-gallery-image']/a"
+    )
     return {link.xpath("img")[0].attrib["title"]: link.attrib["href"] for link in links}
 
 
