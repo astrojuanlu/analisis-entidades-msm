@@ -3,3 +3,4 @@ lxml
 pandas
 polars
 recordlinkage
+unidecode
