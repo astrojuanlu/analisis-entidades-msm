@@ -7,7 +7,10 @@ import httpx
 
 logger = logging.getLogger(__name__)
 
-BENEFITS_URL = "https://madrid.mercadosocial.net/ventajas-socias/"
+BENEFITS_URLS = {
+    "socias": "https://madrid.mercadosocial.net/ventajas-socias/",
+    "entidades": "https://madrid.mercadosocial.net/ventajas-entidades/",
+}
 
 
 def get_categories(element):
@@ -31,8 +34,11 @@ def parse_benefits(element):
     return benefits
 
 
-def main():
-    page = lxml.html.parse("ventajas-socias.html")
+def scrape_benefits_page(benefits_url):
+    resp = httpx.get(benefits_url)
+    resp.raise_for_status()
+
+    page = lxml.html.fromstring(resp.text)
 
     categories = get_categories(page)
 
@@ -46,8 +52,15 @@ def main():
         page = lxml.html.fromstring(resp.text)
         benefits[name] = parse_benefits(page)
 
-    with open("benefits.json", "w") as fh:
-        json.dump(benefits, fh, ensure_ascii=False)
+    return benefits
+
+
+def main():
+    for audience, url in BENEFITS_URLS.items():
+        benefits = scrape_benefits_page(url)
+
+        with open(f"benefits_{audience}.json", "w") as fh:
+            json.dump(benefits, fh, ensure_ascii=False)
 
 
 if __name__ == "__main__":
