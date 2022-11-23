@@ -1,4 +1,3 @@
-import pandas as pd
 import json
 import polars as pl
 
@@ -22,7 +21,7 @@ for category_name, entities in catalog.items():
             entity_data[SOCIAL_MAPPING[social_name]] = social_url
         catalog_data.append(entity_data)
 
-df_catalog = pl.DataFrame(pd.DataFrame.from_records(catalog_data))
+df_catalog = pl.from_records(catalog_data)
 
 # Verify that duplicated rows match duplicated names
 whole_duplicates = df_catalog.select(
