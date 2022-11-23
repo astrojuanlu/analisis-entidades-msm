@@ -1,6 +1,6 @@
-import pandas as pd
 import json
 import polars as pl
+from unidecode import unidecode
 
 SOCIAL_MAPPING = {
     "Página de Facebook": "facebook",
@@ -22,7 +22,7 @@ for category_name, entities in catalog.items():
             entity_data[SOCIAL_MAPPING[social_name]] = social_url
         catalog_data.append(entity_data)
 
-df_catalog = pl.DataFrame(pd.DataFrame.from_records(catalog_data))
+df_catalog = pl.from_records(catalog_data)
 
 # Verify that duplicated rows match duplicated names
 whole_duplicates = df_catalog.select(
@@ -39,5 +39,5 @@ df = (
     df_catalog.unique(subset="entity_name")
     .select(pl.all().exclude("category_in_catalog"))
     .join(categories_in_catalog, on="entity_name")
-)
+).sort(by=pl.col("entity_name").str.to_lowercase().apply(lambda s: unidecode(s)))
 df.write_parquet("catalog.parquet")
