@@ -1,5 +1,6 @@
 import json
 import polars as pl
+from unidecode import unidecode
 
 SOCIAL_MAPPING = {
     "Página de Facebook": "facebook",
@@ -38,5 +39,5 @@ df = (
     df_catalog.unique(subset="entity_name")
     .select(pl.all().exclude("category_in_catalog"))
     .join(categories_in_catalog, on="entity_name")
-)
+).sort(by=pl.col("entity_name").str.to_lowercase().apply(lambda s: unidecode(s)))
 df.write_parquet("catalog.parquet")
