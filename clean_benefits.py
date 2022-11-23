@@ -68,6 +68,11 @@ def clean_benefits(benefits_json):
                     "madrid@mercadosocial.net para indicarte el procedimiento"
                 )
                 .alias("manual_email_procedure"),
+                pl.col("benefit_text")
+                .str.contains(
+                    "Esta ventaja no está disponible para socios/as consumidores/as de intercooperación"
+                )
+                .alias("not_for_intercoop"),
             ]
         )
     )
