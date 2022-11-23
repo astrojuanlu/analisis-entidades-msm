@@ -54,8 +54,23 @@ def clean_benefits(benefits_json):
         .join(good_entities, on="name_in_benefits")
         .select(["name_in_benefits", "categories_in_benefits", "benefit_text"])
     )
-    df = pl.concat([df_good, problematic_entities]).sort("name_in_benefits")
 
+    df = (
+        pl.concat([df_good, problematic_entities])
+        .sort("name_in_benefits")
+        .with_columns(
+            [
+                pl.col("benefit_text")
+                .str.contains("registrada en la app")
+                .alias("mentions_app"),
+                pl.col("benefit_text")
+                .str.contains(
+                    "madrid@mercadosocial.net para indicarte el procedimiento"
+                )
+                .alias("manual_email_procedure"),
+            ]
+        )
+    )
     return df
 
 
