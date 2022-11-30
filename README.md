@@ -1,6 +1,41 @@
 # Datos entidades Mercado Social Madrid
 
-[TBC]
+```mermaid
+graph LR
+
+    U-->|Usa|M
+    U-->|Visita|W
+
+    M-->|Consulta API|HA
+    HG-->|"Manda email a entidades\npara crear perfil"|HA
+    W-.->|Extrae algunos\nfragmentos HTML|HG
+
+    O-.->|"Operan\n(potencialmente)"|HA
+
+    T-->|Desarrolla|M
+    T-->|Desarrolla|HA
+
+    ET-->|Opera|HA
+    ET-->|Opera|HG
+
+    TS-->|Mantiene|W
+
+    E-->|"Gestionan\nsu perfil"|HA
+
+    W["fa:fa-desktop Web"]
+    M["fa:fa-mobile App Móvil"]
+
+    U(("fa:fa-eye\nConsumidora"))
+    E(("fa:fa-chair Entidades"))
+    ET(("fa:fa-hard-hat\nEquipo\nTécnico"))
+    O(("fa:fa-seedling Otros\nMercados\nSociales"))
+
+    HG["fa:fa-desktop fa:fa-gear HG\n(Herramienta Gestora)"]
+    HA["fa:fa-desktop fa:fa-gear HA\n(Herramienta Aplicación)"]
+
+    TS(("fa:fa-briefcase Traficantes\nDe Sueños"))
+    T(("fa:fa-briefcase Triskel\nApps"))
+```
 
 ## TODO
 
