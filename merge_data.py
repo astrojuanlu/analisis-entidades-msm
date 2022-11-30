@@ -3,7 +3,7 @@ import polars as pl
 import recordlinkage
 from recordlinkage.preprocessing import clean
 
-df_catalog = pl.read_parquet("catalog.parquet")
+df_catalog = pl.read_parquet("api.parquet")
 df_benefits = pl.read_parquet("benefits.parquet")
 
 catalog_cols = df_catalog.columns
@@ -11,7 +11,7 @@ catalog_cols = df_catalog.columns
 df_catalog = df_catalog.with_columns(
     [
         pl.from_pandas(
-            clean(df_catalog["entity_name"].to_pandas(), strip_accents="ascii")
+            clean(df_catalog["name"].to_pandas(), strip_accents="ascii")
         ).alias("entity_name_clean")
     ]
 )
@@ -59,10 +59,10 @@ df = (
     .join(matches, on="catalog_idx", how="left")
     .join(df_benefits.drop(["entity_name_clean"]), on="benefits_idx", how="left")
 )
-df.select(pl.all().exclude(pl.List(pl.Utf8))).sort("entity_name").write_csv(
+df.select(pl.all().exclude(pl.List(pl.Utf8))).sort("name").write_csv(
     "entities_full.csv"
 )
 
 df.filter(
     pl.col("benefit_text_socias").is_null() & pl.col("benefit_text_entidades").is_null()
-).select(pl.col("entity_name")).sort("entity_name").write_csv("no_benefits.csv")
+).select(pl.col("name")).sort("name").write_csv("no_benefits.csv")
