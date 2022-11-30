@@ -64,6 +64,28 @@ def parse_entities(element):
     return [parse_entity(td) for td in tds]
 
 
+def scrape_catalog(params=None, url=CATALOG_URL):
+    if params is None:
+        params = {}
+
+    page_number = 1
+    while True:
+        if page_number > 1:
+            params["page"] = page_number
+
+        resp = httpx.get(url, params=params)
+        if resp.status_code == 404:
+            # We ran out of entities, break
+            break
+        else:
+            page_number += 1
+        # There might be other errors: if so, raise
+        resp.raise_for_status()
+
+        page = lxml.html.fromstring(resp.text)
+        yield parse_entities(page)
+
+
 def main():
     resp = httpx.get(CATALOG_URL)
     resp.raise_for_status()
@@ -72,33 +94,36 @@ def main():
 
     categories = get_categories(page)
 
-    entities = {}
+    entities_with_category = {}
     for name, cat_id in categories.items():
         logger.info("Reading category %s", name)
 
         current_entities = []
-        page_number = 1
-        while True:
-            params = {"categories": cat_id}
-            if page_number > 1:
-                params["page"] = page_number
+        for entities in scrape_catalog(params={"categories": cat_id}):
+            current_entities.extend(entities)
 
-            resp = httpx.get(CATALOG_URL, params=params)
-            if resp.status_code == 404:
-                # We ran out of entities, break
-                break
-            else:
-                page_number += 1
-            # There might be other errors: if so, raise
-            resp.raise_for_status()
+        entities_with_category[name] = current_entities
 
-            page = lxml.html.fromstring(resp.text)
-            current_entities.extend(parse_entities(page))
+    logger.info("Reading all entities again")
+    all_entities = []
+    for entities in scrape_catalog():
+        all_entities.extend(entities)
 
-        entities[name] = current_entities
+    logger.info("Assigning entities without category")
+    all_categorized_entity_names = set()
+    for category in entities_with_category.keys():
+        all_categorized_entity_names = all_categorized_entity_names | {
+            e.entity_name for e in entities_with_category[category]
+        }
+
+    entities_dict = entities_with_category.copy()
+    entities_dict["(No category)"] = []
+    for entity in all_entities:
+        if entity.entity_name not in all_categorized_entity_names:
+            entities_dict["(No category)"].append(entity)
 
     with open("catalog.json", "w") as fh:
-        json.dump(entities, fh, ensure_ascii=False, cls=JSONCatalogEntityEncoder)
+        json.dump(entities_dict, fh, ensure_ascii=False, cls=JSONCatalogEntityEncoder)
 
 
 if __name__ == "__main__":

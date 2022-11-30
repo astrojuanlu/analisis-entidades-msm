@@ -17,7 +17,8 @@ with open("catalog.json") as fh:
 catalog_data = []
 for category_name, entities in catalog.items():
     for entity_data in entities:
-        entity_data["category_in_catalog"] = category_name
+        if category_name != "(No category)":
+            entity_data["category_in_catalog"] = category_name
         for social_name, social_url in entity_data.pop("social_links").items():
             entity_data[SOCIAL_MAPPING[social_name]] = social_url
         catalog_data.append(entity_data)
