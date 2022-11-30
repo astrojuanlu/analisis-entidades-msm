@@ -1,5 +1,21 @@
 # Datos entidades Mercado Social Madrid
 
+## Estructura
+
+Cuatro fuentes de datos diferentes:
+
+- El catálogo de la [Herramienta Gestora HG] (visible en la web)
+- Los beneficios de [la web del MSM] (independientes de la HG)
+- La API de la Herramienta Aplicación HA
+- [La web del Mercado Social], que utiliza [Ensenya el Cor] (_no incluida en este análisis_)
+
+[la web del MSM]: https://madrid.mercadosocial.net/
+[Herramienta Gestora HG]: https://gestionmadrid.mercadosocial.net/
+[Herramienta Aplicación HA]: https://app.mercadosocial.net
+
+[La web del Mercado Social]: https://mercadosocial.net/territorios/madrid/
+[Ensenya el Cor]: https://ensenyaelcor.org/
+
 ```mermaid
 graph LR
 
@@ -37,10 +53,6 @@ graph LR
     T(("fa:fa-briefcase Triskel\nApps"))
 ```
 
-## TODO
-
-- Cross-check with https://mercadosocial.net/territorios/madrid/
-
 ## Preguntas
 
 - ¿Cuál es la fecha de última actualización de cada perfil social?
@@ -52,10 +64,6 @@ graph LR
 - ¿Qué tipologías de ventajas hay? ¿Cuántas son relacionadas con la exención del pago del capital social?
 - ¿Qué métodos hay para usar esas ventajas?
   - "Escríbenos a madrid@mercadosocial.net" / "muestra que estás registrada en la app"
-
-## Notas
-
-- Hay 3 categorizaciones diferentes y no coinciden 100 %
 
 ## Análisis
 
