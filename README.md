@@ -53,6 +53,16 @@ graph LR
     T(("fa:fa-briefcase Triskel\nApps"))
 ```
 
+## Funcionamiento
+
+- Los scripts `parse_api.py`, `parse_catalog.py`, y `parse_benefits.py`
+  extraen la información de la HA, HG, y Web respectivamente
+- Los scripts `clean_api.py`, `clean_catalog.py` y `clean_benefits.py`
+  post-procesan los datos
+- El script `check_integrity.py` comprueba el solape entre la HA y la HG
+- El script `merge_data.py` combina los datos de la HA y los beneficios
+  y produce `entities_full.csv` y `no_benefits.csv`
+
 ## Preguntas
 
 - ¿Cuál es la fecha de última actualización de cada perfil social?
