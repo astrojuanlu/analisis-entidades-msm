@@ -50,3 +50,22 @@ df.select(pl.all().exclude(pl.List(pl.Utf8))).sort("name").write_csv(
 df.filter(
     pl.col("benefit_text_socias").is_null() & pl.col("benefit_text_entidades").is_null()
 ).select(pl.col("name")).sort("name").write_csv("no_benefits.csv")
+
+with_benefits = df.select(
+    pl.all().exclude(
+        [
+            "address",
+            "short_description",
+            "description",
+            "facebook_link",
+            "instagram_link",
+            "twitter_link",
+            "webpage_link",
+            "categories",
+            "categories_in_benefits_socias",
+            "categories_in_benefits_entidades",
+        ]
+    )
+).to_pandas()
+benefits_columns = with_benefits.loc[:, "benefit_text_socias":].columns
+with_benefits.dropna(how="all", subset=benefits_columns).to_csv("with_benefits.csv")
